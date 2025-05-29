@@ -1,9 +1,10 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access *//* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, ILike, Repository } from 'typeorm';
 import { Job } from './job.entity';
 import { CreateJobDto } from './create-job.dto';
+import { JobFiltersDto } from './job-filter.dto';
 
 @Injectable()
 export class AppService {
@@ -17,8 +18,28 @@ export class AppService {
     return this.jobRepository.save(job);
   }
 
-  async getJobs(): Promise<Job[]> {
-    return this.jobRepository.find();
-  }
-}
+async getJobs(filters: JobFiltersDto): Promise<Job[]> {
+  const { searchQuery, location, jobType, minSalary ,maxSalary } = filters;
 
+  const where: any = {};
+
+  if (searchQuery) {
+    where.title = ILike(`%${searchQuery}%`);
+  }
+
+  if (location) {
+    where.location = ILike(`%${location}%`);
+  }
+
+  if (jobType) {
+    where.job_type = ILike(jobType);;
+  }
+  // if (minSalary && maxSalary) {
+    console.log(minSalary,maxSalary)
+    where.salary_range = Between(minSalary,maxSalary);
+  // }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  return this.jobRepository.find({ where });
+}
+}
