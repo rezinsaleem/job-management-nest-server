@@ -11,7 +11,7 @@ import { Job } from './job.entity';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'dpg-d0s2q995pdvs73954okg-a.databases.render.com', 
+      host: 'dpg-d0s2q995pdvs73954okg-a', 
       port: 5432,
       username: 'nest_pg_db_user',
       password: 'c6k6qAmedcI5A5WtbpfddMItMexP6qa8',
